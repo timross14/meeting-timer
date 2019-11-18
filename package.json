@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tailwind:css":"tailwind build app/tailwind.src.css -c  tailwind.js -o app/tailwind.css",
-    "start": "npm run tailwind:css && webpack-dev-server --open"
-
+    "tailwind:css": "tailwind build app/tailwind.src.css -c  tailwind.js -o app/tailwind.css",
+    "tailwind:build": "tailwind build app/tailwind.src.css -c  tailwind.js -o build/tailwind.css",
+    "start": "npm run tailwind:css && webpack-dev-server --open",
+    "build": "npm run tailwind:build && webpack --mode production"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "netlify-cli": "^2.21.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "tailwindcss": "^1.1.3"

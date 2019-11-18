@@ -1,8 +1,12 @@
 body {
-  background-color: lightgrey;
+  background-color: rgb(236, 236, 236);
 }
 
 #app {
-  width: 750px;
+  width: auto;
   margin: auto;
+}
+
+.time-money {
+
 }

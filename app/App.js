@@ -1,9 +1,123 @@
 import React from 'react';
 
+class Timer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      seconds: 0,
+      numPeople: 150,
+      avgSalary: 60000,
+      salaryType: 'yearly',
+      money: 0
+    }
+
+    this.intervalHandle;
+    this.startTimer = this.startTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
+    this.handleSalaryChange = this.handleSalaryChange.bind(this);
+    this.handleSalaryTypeChange = this.handleSalaryTypeChange.bind(this);
+    this.handlePeopleChange = this.handlePeopleChange.bind(this);
+    this.tick = this.tick.bind(this);
+  }
+
+  tick() {
+    this.incrementSecond();
+    this.updateMoney();
+  }
+
+  incrementSecond() {
+    let newSeconds = this.state.seconds + 1;
+
+    this.setState({
+      seconds: newSeconds,
+    })
+  }
+
+  updateMoney() {
+    let currentMoney = this.state.money;
+    let numPeople = this.state.numPeople;
+    let avgSalary = this.state.avgSalary;
+    let newMoney = 0;
+    let centsPerSecond = 0;
+    
+    if(this.state.salaryType == 'yearly') {
+       centsPerSecond = numPeople * ( avgSalary / 52 / 40 / 3600 );  
+    } else if(this.state.salaryType == 'hourly') {
+      centsPerSecond = numPeople * avgSalary / 3600
+    }
+    
+    newMoney = currentMoney + centsPerSecond;
+
+    this.setState({
+      money: newMoney
+    })
+  }
+
+  startTimer() {
+    this.intervalHandle = setInterval(this.tick, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.intervalHandle);
+  }
+
+  resetTimer() {
+    this.setState({
+      seconds: 0,
+      money: 0
+    })
+  }
+
+  handleSalaryChange(value) {
+    this.setState({
+      avgSalary: value
+    });
+
+    this.updateMoney();
+  }
+
+  handleSalaryTypeChange(value) {
+    this.setState({
+      salaryType: value
+    })
+  }
+
+  handlePeopleChange(value) {
+    this.setState({
+      numPeople: value
+    })
+  }
+
+  render() {
+    return (
+      <div className="">
+        <div className="lg:flex lg:justify-around time-money">
+          <TimeDisplay seconds={this.state.seconds}/>
+          <MoneyDisplay money={this.state.money}/>
+        </div>
+        <div className="flex flex-wrap items-center justify-center m-5">
+          <StopButton stopTimer={this.stopTimer} />
+          <StartButton startTimer={this.startTimer} />
+          <ResetButton resetTimer={this.resetTimer} />
+        </div>
+        <br></br>
+        <div className="flex justify-center">
+          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-8">
+            <SalaryInput salary={this.state.avgSalary} onSalaryChange={this.handleSalaryChange} />
+            <SalaryTypeInput salaryType={this.state.salaryType} onSalaryTypeChange={this.handleSalaryTypeChange} />
+            <PeopleInput numPeople={this.state.numPeople} onPeopleChange={this.handlePeopleChange} />
+          </form>
+        </div>
+      </div>
+    );
+  }
+}
+
 const inputStyle = "bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full"
 
 const TimeDisplay = props => {
-  console.log(props.seconds)
   let timeString = new Date(1000 * props.seconds).toISOString().substr(11, 8)
 
   return (
@@ -26,7 +140,7 @@ let displayMoney = props.money.toFixed(2)
 const StartButton = props => {
   return (
     <div>
-      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={props.startTimer}>Start</button>
+      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-10" onClick={props.startTimer}>Start</button>
     </div>
   );
 }
@@ -34,7 +148,7 @@ const StartButton = props => {
 const StopButton = props => {
   return (
     <div>
-      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={props.stopTimer}>Stop</button>
+      <button className="px-10 bg-red-500 hover:bg-red-700 text-white font-bold py-2 rounded-l" onClick={props.stopTimer}>Stop</button>
     </div>
   );
 }
@@ -42,7 +156,7 @@ const StopButton = props => {
 const ResetButton = props => {
   return (
     <div>
-      <button className="" onClick={props.resetTimer}>Reset</button>
+      <button className="px-10 py-2 bg-gray-300 hover:bg-gray-700 hover:text-white font-bold rounded-r" onClick={props.resetTimer}>Reset</button>
     </div>
   );
 }
@@ -76,104 +190,6 @@ const PeopleInput = props => {
       Number of People: <input className={inputStyle} value={props.numPeople} onChange={(e) => props.onPeopleChange(e.target.value)} />
     </div>
   )
-}
-
-class Timer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      seconds: 0,
-      numPeople: 150,
-      avgSalary: 60000,
-      salaryType: 'yearly',
-      money: 0
-    }
-
-    this.intervalHandle;
-    this.startTimer = this.startTimer.bind(this);
-    this.stopTimer = this.stopTimer.bind(this);
-    this.resetTimer = this.resetTimer.bind(this);
-    this.handleSalaryChange = this.handleSalaryChange.bind(this);
-    this.handleSalaryTypeChange = this.handleSalaryTypeChange.bind(this);
-    this.handlePeopleChange = this.handlePeopleChange.bind(this);
-    this.tick = this.tick.bind(this);
-  }
-
-  tick() {
-    let currentMoney = this.state.money;
-    let numPeople = this.state.numPeople;
-    let avgSalary = this.state.avgSalary;
-    let newMoney = 0
-      
-    let centsPerSecond = numPeople * ( avgSalary / 52 / 40 / 3600 );
-    newMoney = currentMoney + centsPerSecond;
-
-    console.log(newMoney);
-    let newSeconds = this.state.seconds + 1;
-
-    this.setState({
-      seconds: newSeconds,
-      money: newMoney
-    })
-  }
-
-  startTimer() {
-    this.intervalHandle = setInterval(this.tick, 1000);
-  }
-
-  stopTimer() {
-    clearInterval(this.intervalHandle);
-  }
-
-  resetTimer() {
-    this.setState({
-      seconds: 0,
-      money: 0
-    })
-  }
-
-  handleSalaryChange(value) {
-    this.setState({
-      avgSalary: value
-    })
-  }
-
-  handleSalaryTypeChange(value) {
-    this.setState({
-      salaryType: value
-    })
-  }
-
-  handlePeopleChange(value) {
-    this.setState({
-      numPeople: value
-    })
-  }
-
-  render() {
-    return (
-      <div className="items-center justify-center">
-        <div className="flex flex-wrap justify-around">
-          <TimeDisplay seconds={this.state.seconds}/>
-          <MoneyDisplay money={this.state.money}/>
-        </div>
-        <div className="flex flex-wrap justify-around">
-          <StopButton stopTimer={this.stopTimer} />
-          <StartButton startTimer={this.startTimer} />
-          <ResetButton resetTimer={this.resetTimer} />
-        </div>
-        <br></br>
-        <div className="form">
-          <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <SalaryInput salary={this.state.avgSalary} onSalaryChange={this.handleSalaryChange} />
-            <SalaryTypeInput salaryType={this.state.salaryType} onSalaryTypeChange={this.handleSalaryTypeChange} />
-            <PeopleInput numPeople={this.state.numPeople} onPeopleChange={this.handlePeopleChange} />
-          </form>
-        </div>
-      </div>
-    );
-  }
 }
 
 export { Timer }
