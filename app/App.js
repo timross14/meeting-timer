@@ -92,8 +92,8 @@ class Timer extends React.Component {
 
   render() {
     return (
-      <div className="">
-        <div className="lg:flex lg:justify-around time-money">
+      <div className="min-h-full font-sans">
+        <div className="time-money flex-col text-center lg:flex">
           <TimeDisplay seconds={this.state.seconds}/>
           <MoneyDisplay money={this.state.money}/>
         </div>
@@ -122,17 +122,16 @@ const TimeDisplay = props => {
 
   return (
     <div className="a">
-      <h1 style={{ fontSize: 100 }}>{timeString}</h1>
+      <h1 class="">{timeString}</h1>
     </div>
   );
 }
 
 const MoneyDisplay = props => {
 let displayMoney = props.money.toFixed(2)
-
   return (
     <div>
-      <h1 style={{ fontSize: 100 }} className="text-green-400">${displayMoney}</h1>
+      <h1 className="text-green-400">${displayMoney}</h1>
     </div>
   );
 }

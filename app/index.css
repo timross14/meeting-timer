@@ -3,10 +3,9 @@ body {
 }
 
 #app {
-  width: auto;
-  margin: auto;
+  
 }
 
 .time-money {
-
+  font-size: 50px;
 }
