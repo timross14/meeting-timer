@@ -19,8 +19,8 @@
     "tailwindcss": "^1.1.3"
   },
   "devDependencies": {
-    "html-webpack-plugin": "^3.2.0",
-    "webpack": "^4.41.2",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.75.0",
     "webpack-dev-server": "^3.9.0"
   },
   "babel": {
